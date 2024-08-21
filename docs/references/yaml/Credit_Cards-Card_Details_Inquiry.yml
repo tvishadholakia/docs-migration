@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   version: 0.1.9
   title: Credit Cards - Card Details Inquiry
-  description: API to fetch the AAN number of the Credit Card.</br></br>
+  description: API to fetch the AAN number of the Credit Card.
     
     
     <b>{ </br></br>
