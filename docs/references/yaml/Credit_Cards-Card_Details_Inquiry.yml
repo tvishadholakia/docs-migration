@@ -31,7 +31,7 @@ servers:
    - url: https://api-tryitout-uat.hdfcbank.com
 tags:
   - name: Credit Cards - Card Details Inquiry
-    description: <b>Medium Criticality</b>
+    description: Medium Criticality
 security:
     - ApiKeyAuth: []    
 paths:
@@ -144,22 +144,27 @@ components:
                 channel:
                   type: string
                   description: Channel code from which transaction is executed.Every system calling OBP-MW services will have unique channel code.Ex:- IB01 for Netbanking channel
+                  maxLength: 5
                   example: "APIGW"
                 userId:
                   type: string
                   description: System or Channel User ID.Every system/channel will a specific pre-configured user Ex:- Netbanking channel user – USER_IB01
+                  maxLength: 36
                   example: "APIGW_USER"
                 externalReferenceNo:
                   type: string
                   description: Unique reference number for each transaction for a lifetime
+                  maxLength: 40
                   example: "49569565" 
                 bankCode:
                   type: string
                   description: Bank code or financial institution identification of the user performing an interaction with the host. 
+                  maxLength: 5
                   example: "08"
                 transactionBranch:
                   type: string
                   description: Branch from which the user is doing the transaction. It may differ from the branch to which the user belongs
+                  maxLength: 5
                   example: "089999"
          InquireCardDetailsRequest:
               type: object
@@ -173,10 +178,12 @@ components:
                       mobileNo:
                         type: string
                         description: Registered mobile Number of the customer
+                        maxLength: 20
                         example: "9876544167"
                       cardNo:
                         type: string
                         description: Last 4 digit of the card number
+                        maxLength: 4
                         example: "9522" 
     response:
      type: object
