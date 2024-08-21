@@ -1,0 +1,466 @@
+openapi: 3.0.3
+info:
+  version: 0.1.9
+  title: Credit Cards - Card Details Inquiry
+  description: API to fetch the AAN number of the Credit Card.</br></br>
+    
+    
+    <b>{ </br></br>
+    &nbsp;&nbsp;&nbsp;"RequestEncryptedValue" :&nbsp; " ",</br></br>
+    &nbsp;&nbsp;&nbsp;"SymmetricKeyEncryptedValue" :&nbsp; " ",</br></br>
+    &nbsp;&nbsp;&nbsp;"Scope" :&nbsp; " ",</br></br>
+    &nbsp;&nbsp;&nbsp;"TransactionId" :&nbsp; " ",</br></br>
+    &nbsp;&nbsp;&nbsp;"OAuthTokenValue" :&nbsp; " "</br></br>
+    }</b>
+   
+   
+    The individual fields of the Standard JSON Request Payload are briefly described below- 
+    
+    <li><b>RequestEncryptedValue</b> :- This will contain the encrypted value of digitally signed original REST-JSON request sample.(Mandatory)</li></br>
+     <li><b>SymmetricKeyEncryptedValue</b> :- This will contain the encrypted value of a symmetric key used in field 1.(Mandatory)</li></br>
+     <li><b>Scope</b> :- This field should be the exact value which was set on the HDFC Bank’s API Portal during the partner onboarding process and indicates which external partner is invoking the API.(Mandatory)</li></br>
+     <li><b>TransactionId</b> :- External partners need to set a transaction ID to uniquely identify every request, in order to retrieve it from an audit trail at a later date.(Mandatory)</li></br>
+       <li><b>OAuthTokenValue</b> :- This value can be obtained by invoking HDFC Bank’s token generator service (N/A) 
+       </li></br>
+       
+       
+       <b>Credit_Cards-Card_Details_Inquiry API Gateway Service URL's</b></br>
+    <b>UAT Endpoint</b> :- https://api-uat.hdfcbank.com/API/CC_InquireCardDetails</br>
+    <b>PROD Endpoint</b> :- https://api.hdfcbank.com/API/CC_InquireCardDetails</br> 
+servers: 
+   - url: https://api-tryitout-uat.hdfcbank.com
+tags:
+  - name: Credit Cards - Card Details Inquiry
+    description: <b>Medium Criticality</b>
+security:
+    - ApiKeyAuth: []    
+paths:
+
+  '/API/CC/Sandbox/CC_InquireCardDetails':
+    post: 
+      tags:
+        -  Credit Cards - Card Details Inquiry
+      summary: Credit Cards - Card Details Inquiry
+      description: <a href='https://developer.hdfcbank.com/sites/default/files/2023-02/HDFCBank_CC_InquireCardDetails%20API_v1.1.docx'>User manual</a>
+      requestBody:
+        description: Request
+        required: true
+        content:
+          application/json:
+            schema:
+               $ref: '#/components/schemas/request'
+      parameters:
+        - in: header
+          name: apikey
+          required: true
+          schema:
+            type: string
+            example: aHNDiZ5fj52HXscBQMBEJwdG3BBNjBNNaeCyKt5ff4DL6RmO
+      responses:
+       '200':
+          description: API gateway response
+          content:
+           application/json:
+            schema:
+              $ref: '#/components/schemas/response'
+      
+       '400':
+           description: 400 Bad Request
+           content:
+            application/json:
+             schema:
+              $ref: '#/components/schemas/Error400'      
+       '401':
+          description: 401 Unauthorized 
+          content:
+           application/json:
+            schema:
+             $ref: '#/components/schemas/Error401'    
+     
+       '405':
+           description: 405 Method Not Allowed 
+           content:
+             application/json:
+              schema:
+               $ref: '#/components/schemas/Error405'
+       '410':
+           description: 410 Gone
+           content:
+             application/json:
+              schema:
+               $ref: '#/components/schemas/Error410'         
+       '411':
+           description: 411 Length Required
+           content:
+             application/json:
+              schema:
+               $ref: '#/components/schemas/Error411'
+       '421':
+           description: 421 Misdirected Request
+           content:
+             application/json:
+              schema:
+               $ref: '#/components/schemas/Error421'       
+          
+       '422':
+           description: 422 Unprocessable Entity (WebDAV)
+           content:
+             application/json:
+              schema:
+               $ref: '#/components/schemas/Error422'
+       '429':
+           description: 429 Too Many Requests 
+           content:
+             application/json:
+              schema:
+               $ref: '#/components/schemas/Error429'         
+        
+       '500':
+           description: 500 Internal Server Error 
+           content:
+             application/json:
+              schema:
+               $ref: '#/components/schemas/Error500'
+       '503':
+           description: 503 Service Unavailable
+           content:
+             application/json:
+              schema:
+               $ref: '#/components/schemas/Error503'
+components:
+  schemas:
+    request:
+      type: object
+      properties:
+         sessionContext:
+            type: object
+            required:
+              - channel
+              - userId
+              - externalReferenceNo
+              - bankCode
+              - transactionBranch
+            properties:
+                channel:
+                  type: string
+                  description: Channel code from which transaction is executed.Every system calling OBP-MW services will have unique channel code.Ex:- IB01 for Netbanking channel
+                  example: "APIGW"
+                userId:
+                  type: string
+                  description: System or Channel User ID.Every system/channel will a specific pre-configured user Ex:- Netbanking channel user – USER_IB01
+                  example: "APIGW_USER"
+                externalReferenceNo:
+                  type: string
+                  description: Unique reference number for each transaction for a lifetime
+                  example: "49569565" 
+                bankCode:
+                  type: string
+                  description: Bank code or financial institution identification of the user performing an interaction with the host. 
+                  example: "08"
+                transactionBranch:
+                  type: string
+                  description: Branch from which the user is doing the transaction. It may differ from the branch to which the user belongs
+                  example: "089999"
+         InquireCardDetailsRequest:
+              type: object
+              properties:
+                  requestString:
+                    type: object
+                    required:
+                      - mobileNo
+                      - cardNo
+                    properties:
+                      mobileNo:
+                        type: string
+                        description: Registered mobile Number of the customer
+                        example: "9876544167"
+                      cardNo:
+                        type: string
+                        description: Last 4 digit of the card number
+                        example: "9522" 
+    response:
+     type: object
+     properties:
+      type:
+        type: string
+        example: "inquireCardDetailsResponse"
+      responseString:
+        type: string
+        example: "{\"MOB_NBR\":\"9876544167\",\"SVC_RETURN\":\"P\",\"RC_NBR_OCCUR\":\"0\",\"CARD_NBR\":\"0005535XXXXXXXX9522\",\"SOURCE\":\"\",\"AAN\":\"0001011740004209520\",\"status\":{\"replyText\":\"0\",\"isOverriden\":false,\"internalReferenceNumber\":\"2020316299913605\",\"replyCode\":0,\"errorCode\":\"0\",\"externalReferenceNo\":\"49569565\",\"postingDate\":{\"dateString\":\"20201111000000\"},\"extendedReply\":{}}}"
+          
+    Error400:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99400: Decryption Failed"
+                description: "TH99400: Decryption Failed" 
+         
+    Error401:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99401: Invalid API Key"
+                description: "TH99401: Invalid API Key"
+    
+    Error405:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99405:Request Method Not Allowed For API Access"
+                description: "TH99405:Request Method Not Allowed For API Access"
+                
+    Error410:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99410:Cross Site Forgery Detected in API Request Message Payload"
+                description: "TH99410:Cross Site Forgery Detected in API Request Message Payload" 
+                
+    Error411:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99411:Invalid Content Type in API Request Message Payload"  
+                description: "TH99411:Invalid Content Type in API Request Message Payload"              
+     
+    Error421:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99421:Document Structure Threat in API Request Message Payload"         
+                description: "TH99421:Document Structure Threat in API Request Message Payload"                                  
+    Error422:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99422:SQL Injection Detected in API Request Message Payload"
+                description: "TH99422:SQL Injection Detected in API Request Message Payload"
+                
+    Error429:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99429:DDOS Attack Detected from Requestor"
+                description: "TH99429:DDOS Attack Detected from Requestor"            
+    Error500:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99500:Backend Service Provided Unexpected Response"
+                
+                description: "TH99500:Backend Service Provided Unexpected Response"
+  
+    Error503:
+      type: object
+      required:
+        - ResponseEncryptedValue
+          GWSymmetricKeyEncryptedValue
+          Scope
+          TransactionId
+          Status
+      properties:
+        
+              ResponseEncryptedValue:
+                type: string
+                example:  ""
+              GWSymmetricKeyEncryptedValue:
+                type: string
+                example:  ""
+              Scope:
+                type: string
+                example: ExampleOrg
+              TransactionId:
+                type: string
+                example: 2019-05-04 T11:46:12.969+05:30
+              Status:
+                type: string
+                example: "TH99503:API Back-end Service Not Available or Timed-Out"
+                description: "TH99503:API Back-end Service Not Available or Timed-Out"
+    
+                
+  securitySchemes:
+     ApiKeyAuth:        
+      type: apiKey
+      in: header       
+      name: apikey 
+
+  
